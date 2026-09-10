@@ -1,0 +1,20 @@
+# Activos regenerables del reporte
+/report_assets/
+
+# Salidas intermedias del modelo. Se conserva únicamente el libro final.
+/outputs/*
+!/outputs/intercambio/
+/outputs/intercambio/*
+!/outputs/intercambio/output_grupo3.xlsx
+
+# Archivos auxiliares producidos al compilar LaTeX
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+
+# Estado local de Jupyter
+.ipynb_checkpoints/

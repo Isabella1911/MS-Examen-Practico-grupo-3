@@ -1,0 +1,257 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage[margin=1.75cm]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\hypersetup{colorlinks=true,linkcolor=blue!45!black,urlcolor=blue!45!black}
+\captionsetup{font=small,skip=4pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.28em}
+\setlength{\textfloatsep}{8pt}
+\setlength{\floatsep}{7pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.08}
+
+\input{report_assets/resumen/resultados.tex}
+
+\title{\vspace{-1.4cm}\textbf{Cadena de suministro de ayuda humanitaria}\\
+\large Modelo y resultados del Grupo 3}
+\author{Grupo 3}
+\date{}
+
+\begin{document}
+\maketitle
+\vspace{-1.2cm}
+
+\section{Justificación del paradigma}
+
+Se eligió una \textbf{simulación de eventos discretos con estado actualizado en
+pasos de seis horas}. La decisión se basó en cuatro criterios: el sistema cambia
+por eventos fechados (consumo, reposición y llegada potencial de convoyes), los
+inventarios deben conservarse entre bloques, las restricciones de rutas y flota
+son operativas, y las conclusiones requieren comparar realizaciones
+estocásticas. La dinámica de sistemas sería útil para estudiar flujos agregados,
+pero ocultaría la identidad de centros, rutas y vehículos. Un modelo basado en
+agentes permitiría conductas individuales, aunque el Excel no proporciona reglas
+de decisión para personas o conductores que justifiquen esa complejidad.
+
+La unidad de evolución es el bloque temporal. En cada realización se actualizan
+inventario, demanda satisfecha y déficit para cada zona--suministro. La red y la
+flota se conservan como entidades explícitas para evaluar factibilidad del
+convoy, combustible y distribución. La frontera híbrida es deliberada: el
+balance de inventario es discreto y estocástico, mientras la recomendación de
+rutas es una heurística posterior que ordena necesidad y eficiencia. No se
+presenta esa heurística como un óptimo matemático.
+
+\section{Descripción del modelo (ODD simplificado)}
+
+\textbf{Propósito y alcance.} El modelo estima, durante 72 horas post-evento, el
+balance de agua, alimentos y medicamentos, el primer agotamiento y el margen de
+respuesta logística. Se ejecutan \NumeroRealizaciones{} realizaciones con una
+semilla base reproducible y semillas independientes por realización.
+
+\textbf{Entidades y atributos.} Los cuatro centros de acopio tienen zona,
+capacidad e inventario por suministro. Las cinco zonas reciben una demanda por
+bloque. Cada suministro posee tasa per cápita y unidad. Las nueve rutas tienen
+origen, destino, distancia, tiempo, capacidad vehicular y estado. La flota tiene
+tipo, cantidad, capacidad, rendimiento y combustible. Un convoy es una
+alternativa evaluada con ruta, vehículo, cantidad, salida y llegada.
+
+\textbf{Variables de estado.} Para zona $z$, suministro $s$ y bloque $t$ se
+registran inventario inicial $I^{\mathrm{ini}}_{zst}$, reposición $R_{zst}$,
+demanda $D_{zst}$, consumo satisfecho $C_{zst}$, inventario final
+$I^{\mathrm{fin}}_{zst}$, déficit $NS_{zst}$ y superávit $S_{zst}$. La demanda
+se obtiene con la población $P_{zt}$ y la tasa de consumo $c_s$:
+\begin{align}
+D_{zst}&=P_{zt}c_s,\\
+A_{zst}&=I^{\mathrm{ini}}_{zst}+R_{zst},\\
+C_{zst}&=\min(A_{zst},D_{zst}),\\
+I^{\mathrm{fin}}_{zst}&=A_{zst}-C_{zst},\\
+NS_{zst}&=\max(0,D_{zst}-A_{zst}),\qquad
+S_{zst}=\max(0,A_{zst}-D_{zst}).
+\end{align}
+El agotamiento crítico exige simultáneamente $I^{\mathrm{fin}}_{zst}=0$ y
+$NS_{zst}>0$; así no se confunde inventario exactamente nulo con escasez.
+
+\textbf{Logística y combustible.} Para una ruta de distancia de ida $d_r$, un
+vehículo con consumo $g_v$ y $n$ unidades movilizadas usa
+\begin{equation}
+G_{rv}=2d_r g_v n.
+\end{equation}
+La frecuencia recomendada se limita por viajes completos dentro del bloque y
+por la reserva de combustible compartida. Una ruta no disponible no participa;
+si el Grupo 4 recomienda vehículo liviano, el camión grande queda excluido.
+
+\textbf{Scheduling, comunicación e inicialización.} En cada bloque se recibe la
+reposición programada, se calcula la demanda, se atiende hasta agotar la
+disponibilidad y el inventario final pasa al siguiente bloque. Los centros no
+intercambian mensajes como agentes: la ``comunicación'' es el estado tabular de
+demanda, rutas y llegada de reposiciones. Inventarios, rutas, flota, combustible
+y reposiciones provienen del Excel; la población formal post-intercambio viene
+del Grupo 1. El Grupo 4 actualiza tiempos desde Z4 y compatibilidad de vehículo,
+sin crear capacidades ni rutas ausentes.
+
+\section{Resultados y análisis}
+
+\subsection{Trayectorias, balance y agotamiento}
+
+La Figura~\ref{fig:trayectorias} muestra la media y el IC 95\% del inventario en
+las combinaciones críticas. El escenario base identifica
+\ZonaCriticaBase{}/medicamentos; después del intercambio la combinación crítica
+abastecible es \ZonaCriticaPost{}/\SuministroCritico{}. Su agotamiento medio es
+\TiempoAgotamientoMedio{} h, con IC 95\%
+[\TiempoAgotamientoICInf{}, \TiempoAgotamientoICSup{}] h.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.78\linewidth]{report_assets/figuras/trayectorias_criticas.pdf}
+\caption{Inventario final medio e IC 95\% de las combinaciones críticas en los escenarios base y post-intercambio.}
+\label{fig:trayectorias}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Primer agotamiento crítico en zonas abastecibles.}
+\label{tab:agotamiento}
+\small
+\input{report_assets/tablas/tabla_agotamiento.tex}
+\end{table}
+
+El balance completo conserva una fila por bloque, zona y suministro, con
+inventario inicial, reposición, demanda, consumo, inventario final, déficit y
+superávit; su versión final se exporta en el paquete de activos. La demanda media total
+cambia de \DemandaBase{} a \DemandaPost{} unidades y el déficit medio total de
+\DeficitBase{} a \DeficitPost{}. La comparación incluye IC 95\% calculados
+sobre realizaciones, no sobre filas mezcladas.
+
+\begin{table}[H]
+\centering
+\caption{Comparación agregada antes y después del intercambio.}
+\label{tab:comparacion}
+\small
+\input{report_assets/tablas/tabla_comparacion.tex}
+\end{table}
+
+La Figura~\ref{fig:deficit} separa la brecha estructural de Z1 ---sin centro ni
+ruta de entrada--- de los déficits operativos. La cobertura estructural final es
+\CoberturaFinal{} de las zonas del contrato.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.68\linewidth]{report_assets/figuras/deficit_zonal_post.pdf}
+\caption{Déficit medio acumulado por zona en el escenario post-intercambio.}
+\label{fig:deficit}
+\end{figure}
+
+\subsection{Convoy, distribución y cuellos de botella}
+
+En el escenario base, el último momento seguro para activar el convoy deja un
+margen de \MargenConvoyBase{} h. Para la nueva zona crítica post-intercambio el
+margen factible es \MargenConvoy{} h: no existe un convoy externo que llegue
+antes del agotamiento con la red disponible. Esta diferencia evita interpretar
+una mejora temporal promedio como factibilidad logística automática.
+
+La ruta prioritaria es \RutaPrioritaria{}, con
+\ViajesRutaPrioritaria{} viajes por bloque. La asignación usa
+\CombustibleUtilizado{} galones y nunca excede la reserva por tipo de vehículo.
+La frecuencia es una recomendación heurística, pues faltan equivalencias entre
+metros cúbicos y las unidades de suministros.
+
+\begin{table}[H]
+\centering
+\caption{Primeras rutas de la recomendación de distribución.}
+\label{tab:plan}
+\scriptsize
+\input{report_assets/tablas/tabla_plan.tex}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Principales cuellos de botella trazados a los datos.}
+\label{tab:cuellos}
+\small
+\input{report_assets/tablas/tabla_cuellos.tex}
+\end{table}
+
+\textbf{Respuesta 1 del Grupo 3.} Antes del intercambio, el primer suministro
+crítico es medicamentos en \ZonaCriticaBase{}; el convoy dispone de
+\MargenConvoyBase{} h de margen. Después del intercambio, entre zonas
+abastecibles, el primer crítico es \SuministroCritico{} en
+\ZonaCriticaPost{}, en el bloque asociado a \TiempoAgotamientoMedio{} h, y no
+hay convoy externo factible a tiempo.
+
+\textbf{Respuesta 2 del Grupo 3.} La zona crítica abastecible sí cambia de
+\ZonaCriticaBase{} a \ZonaCriticaPost{}. La atribución por escenarios aislados
+señala como factor dominante la demanda formal del Grupo 1. La accesibilidad del
+Grupo 4 modifica tiempos y factibilidad del convoy, pero el motor de balance no
+usa rutas para alterar inventario; por tanto no se le atribuye un cambio de
+déficit que el código no modela.
+
+\section{Incorporación del intercambio}
+
+\textbf{Grupo 1:} se recibió población por Z1--Z5 y bloque. La estructura ancha
+se transformó a bloque--zona y sustituyó la estimación proporcional a capacidad
+de almacenamiento. Con las mismas tasas del Excel se recalculó
+$D_{zst}=P_{zt}c_s$. Esto reveló demanda real en Z1 y cambió la combinación
+crítica abastecible.
+
+\textbf{Grupo 4:} se recibió vehículo transitable, tiempo mediano desde Z4 e
+índice de aislamiento por zona y bloque. Los tiempos solo sustituyen rutas con
+origen en la Bodega Central de Z4; el código liviano impide asignar camión
+grande. No se alteran capacidades porque el reporte no las proporciona, ni se
+crean rutas para Z1 o para destinos cuya zona sigue sin identificar.
+
+\begin{center}
+\fbox{\parbox{.92\linewidth}{
+\textbf{Antes} (población estimada y tiempos del Excel)
+$\rightarrow$ \textbf{información recibida} (población formal y accesibilidad)
+$\rightarrow$ \textbf{cambio del modelo} (demanda y restricciones de tránsito)
+$\rightarrow$ \textbf{después} (\ZonaCriticaPost{}/\SuministroCritico{},
+con brecha estructural en Z1).}}
+\end{center}
+
+La trazabilidad completa ---campo recibido, transformación, regla afectada y
+supuesto confirmado o contradicho--- se exporta con el Excel final. Esta cadena
+separa el dato externo de las decisiones de equivalencia del equipo.
+
+\section{Limitaciones y propuestas de mejora}
+
+\begin{tabularx}{\linewidth}{@{}p{.19\linewidth}X X@{}}
+\toprule
+\textbf{Limitación} & \textbf{Impacto y posible sesgo} & \textbf{Mejora y dato necesario}\\
+\midrule
+Capacidad en m$^3$ & No puede restringirse rigurosamente agua, raciones y kits; la frecuencia puede sobrestimar cobertura. & Incorporar volumen y compatibilidad de carga por unidad de cada suministro.\\
+Reposición sin centro & Asignarla a la Bodega Central concentra disponibilidad y puede sesgar el agotamiento zonal. & Registrar centro receptor y tiempo de traslado para cada reposición.\\
+Bloqueo parcial & No existe porcentaje residual; conservar capacidad puede ser optimista. & Obtener capacidad y velocidad por ruta y bloque, vinculadas inequívocamente al mapa del Grupo 4.\\
+Albergue Estadio & Sin zona no puede competir por prioridad ni recibir accesibilidad zonal. & Entregar coordenadas o equivalencia oficial destino--zona.\\
+Información perfecta & La prioridad oficial supone observación inmediata y puede reaccionar tarde en operación. & Integrar telemetría y una política de despacho que retroalimente inventarios.\\
+\bottomrule
+\end{tabularx}
+
+La sensibilidad de seis horas conserva el déficit físico, porque el plan no
+retroalimenta el balance, pero deja \DeficitNoObservadoRetraso{} unidades sin
+observar al cierre. Cambian \RutasCambioPrioridad{} prioridades; la zona más
+afectada por información tardía es \ZonaAfectadaRetraso{}. Presentar ese déficit
+como ``adicional causado'' sería ficticio: cuantificarlo exige que los despachos
+modifiquen inventarios y cobertura dentro del motor.
+
+\begin{table}[H]
+\centering
+\caption{Sensibilidad a seis horas de retraso informativo.}
+\label{tab:sensibilidad}
+\small
+\input{report_assets/tablas/tabla_sensibilidad.tex}
+\end{table}
+
+\end{document}
