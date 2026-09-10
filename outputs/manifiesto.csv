@@ -1,0 +1,17 @@
+﻿archivo,output,descripcion
+o01_balance_resumen_intercambio,O01,"Balance agregado por bloque, zona y suministro: media sobre las 100 realizaciones e IC 95% de demanda, déficit e inventario final. Es la tabla principal de O01 en el escenario post-intercambio."
+o01_balance_resumen_base,O01,Mismo balance agregado en el escenario previo al intercambio.
+o01_balance_suministros_intercambio,O01,"Detalle por realización, bloque, zona y suministro del escenario post-intercambio. Respaldo del agregado; solo en CSV por su tamaño."
+o01_balance_suministros_base,O01,Detalle por realización del escenario base. Respaldo del agregado; solo en CSV por su tamaño.
+o02_primer_agotamiento_intercambio,O02,"Primer agotamiento por realización: bloque, hora, zona, suministro y déficit en ese momento."
+o02_primer_agotamiento_base,O02,"Primer agotamiento del escenario base, con el supuesto propio de población."
+o02_resumen_agotamiento,O02,"Respuesta directa al inciso b: zona y suministro que se agotan, frecuencia entre realizaciones y hora media con IC 95%, en ambos escenarios. Marca la combinación crítica y los agotamientos estructurales."
+o02_deficit_por_zona_intercambio,O02,"Demanda no satisfecha por zona y suministro, con media e IC 95% sobre las realizaciones."
+o03_priorizacion_rutas,O03,"Orden de prioridad de las rutas, vehículo recomendado, viajes por bloque, combustible asignado y qué limita cada ruta."
+o03_uso_combustible,O03,"Combustible inicial, asignado y remanente por tipo de vehículo bajo la recomendación."
+o03_convoy_margen_intervencion,O03,"Última hora segura de activación del convoy y hora de llegada, antes y después del intercambio."
+cuellos_de_botella,O01/O03,"Restricciones que impiden cubrir la demanda, con severidad, bloques afectados, evidencia y efecto."
+comparacion_escenarios,Contexto,"Demanda, déficit y primer agotamiento en ambos escenarios, con IC 95%."
+trazabilidad_intercambio,Contexto,"Qué campo se recibió de cada grupo, en qué campo interno quedó y qué regla del modelo afectó."
+supuestos_intercambio,Contexto,"Supuestos previos del Grupo 3 contrastados contra la evidencia del intercambio, con su resolución."
+cobertura_zonas,Contexto,"Qué zonas tienen centro, ruta o ninguna vía de abastecimiento en la red del Excel."

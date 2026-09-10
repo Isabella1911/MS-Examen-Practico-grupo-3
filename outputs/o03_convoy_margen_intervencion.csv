@@ -1,0 +1,4 @@
+﻿escenario,zona_objetivo,suministro_objetivo,hora_agotamiento_sin_intervencion,hora_limite_activacion,hora_llegada_convoy,ruta_id,tipo_vehiculo,margen_horas,observacion,restriccion_vehiculo_grupo4
+base_pre_intercambio,Z5,medicamentos,36,24.0,31.0,R03,camion_grande,24.0,Convoy factible dentro del margen.,No aplica (escenario previo al intercambio)
+post_intercambio (misma zona que la base),Z5,medicamentos,42,36.0,36.416666666666664,R03,camion_grande,36.0,Convoy factible dentro del margen.,Vehículo elegido compatible con lo reportado por el Grupo 4.
+post_intercambio (nueva zona crítica),Z3,medicamentos,42,,,,,0.0,Ningún bloque de activación produce un convoy que llegue antes del agotamiento.,Sin convoy factible: la restricción no llega a aplicarse.

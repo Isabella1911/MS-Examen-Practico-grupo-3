@@ -1,0 +1,6 @@
+﻿zona,tiene_centro_de_acopio,tiene_ruta_en_la_red_original,abastecimiento_posible,reportada_por_grupo4,observacion
+Z1,False,False,False,True,Zona reportada por el Grupo 4 sin centro de acopio y sin ninguna ruta en la red del Excel; se documenta como brecha estructural y no se inventa una ruta.
+Z2,True,True,True,True,Zona alcanzable por al menos una ruta original.
+Z3,True,True,True,True,Zona alcanzable por al menos una ruta original.
+Z4,True,False,True,True,Zona con centro de acopio propio; no necesita ruta de entrada en la red original.
+Z5,True,True,True,True,Zona alcanzable por al menos una ruta original.

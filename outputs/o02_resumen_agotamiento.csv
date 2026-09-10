@@ -1,0 +1,10 @@
+﻿escenario,alcance,zona,suministro,realizaciones,frecuencia,bloque_medio,hora_media,hora_ic95_inferior,hora_ic95_superior,hora_mas_temprana,deficit_medio_al_agotarse,zona_abastecible,agotamiento_estructural,combinacion_critica
+base_pre_intercambio,todas las zonas,Z5,medicamentos,62,0.62,5.854838709677419,35.12903225806452,34.521624786343445,35.736439729785594,30.0,11.897947913936957,True,False,False
+base_pre_intercambio,todas las zonas,Z3,medicamentos,37,0.37,5.945945945945946,35.67567567567568,35.01791545914148,36.33343589220988,30.0,17.332172968154953,True,False,False
+base_pre_intercambio,todas las zonas,Z2,medicamentos,1,0.01,6.0,36.0,36.0,36.0,36.0,24.120122925129948,True,False,False
+base_pre_intercambio,solo zonas abastecibles,Z5,medicamentos,62,0.62,5.854838709677419,35.12903225806452,34.521624786343445,35.736439729785594,30.0,11.897947913936957,True,False,True
+base_pre_intercambio,solo zonas abastecibles,Z3,medicamentos,37,0.37,5.945945945945946,35.67567567567568,35.01791545914148,36.33343589220988,30.0,17.332172968154953,True,False,False
+base_pre_intercambio,solo zonas abastecibles,Z2,medicamentos,1,0.01,6.0,36.0,36.0,36.0,36.0,24.120122925129948,True,False,False
+post_intercambio,todas las zonas,Z1,agua,100,1.0,0.0,0.0,0.0,0.0,0.0,311.80991684554897,False,True,False
+post_intercambio,solo zonas abastecibles,Z3,medicamentos,95,0.95,6.431578947368421,38.589473684210525,37.98087985374235,39.1980675146787,36.0,14.773989335881316,True,False,True
+post_intercambio,solo zonas abastecibles,Z5,medicamentos,5,0.05,6.4,38.4,34.31947571605046,42.480524283949535,36.0,7.0224150500885685,True,False,False
